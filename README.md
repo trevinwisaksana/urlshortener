@@ -19,7 +19,7 @@ make postgres
 ```
 make server
 ```
-This will generate a container and database with the title `urlshortener`. Then we need to create a table on that database.
+This will generate a container and database with the title `urlshortener`. Then we need to create a table on that database. To do that, run this SQL script on your database manager app.
 ```
 CREATE TABLE "urls" (
   "id" varchar(5) PRIMARY KEY,
