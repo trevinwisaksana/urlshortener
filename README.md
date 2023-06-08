@@ -1,14 +1,6 @@
 # URL Shortener
 This repository contains Golang implementation of a url shortener.
 
-## Install
-
-To install, download or clone the repo, then:
-
-```
-npm install
-```
-
 ## Usage
 
 Firstly, we need Docker and Go version 1.19.3. To run this, on the terminal run these commands in order:
