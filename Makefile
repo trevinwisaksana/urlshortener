@@ -7,9 +7,6 @@ createdb:
 server:
 	go run main.go
 
-redirect:
-	go run cmd/redirect/redirect.go
-
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/trevinwisaksana/trevin-urlshortener/db/sqlc Store
 
