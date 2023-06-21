@@ -16,6 +16,8 @@ import (
 	"github.com/stretchr/testify/require"
 	mockdb "github.com/trevinwisaksana/trevin-urlshortener/db/mock"
 	db "github.com/trevinwisaksana/trevin-urlshortener/db/sqlc"
+	"github.com/trevinwisaksana/trevin-urlshortener/token"
+	"github.com/trevinwisaksana/trevin-urlshortener/tools"
 )
 
 type eqCreateShortURLParamsMatcher struct {
@@ -29,8 +31,8 @@ func (e eqCreateShortURLParamsMatcher) Matches(x interface{}) bool {
 		return false
 	}
 
-	e.arg.ID = arg.ID
 	e.arg.ShortUrl = arg.ShortUrl
+	e.arg.Owner = arg.Owner
 
 	return reflect.DeepEqual(e.arg, arg)
 }
@@ -44,11 +46,13 @@ func EqCreateShortURLParams(arg db.CreateShortURLParams) gomock.Matcher {
 }
 
 func TestShortenURL(t *testing.T) {
-	url := dummyURL(t)
+	user, _ := randomUser(t)
+	url := dummyURL(t, user.Username)
 
 	testCases := []struct {
 		name          string
 		body          gin.H
+		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.PasetoMaker)
 		buildStub     func(store *mockdb.MockStore)
 		checkResponse func(recorder *httptest.ResponseRecorder)
 	}{
@@ -57,9 +61,11 @@ func TestShortenURL(t *testing.T) {
 			body: gin.H{
 				"long_url": url.LongUrl,
 			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.PasetoMaker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
+			},
 			buildStub: func(store *mockdb.MockStore) {
 				arg := db.CreateShortURLParams{
-					ID:       url.ID,
 					LongUrl:  url.LongUrl,
 					ShortUrl: url.ShortUrl,
 				}
@@ -78,6 +84,9 @@ func TestShortenURL(t *testing.T) {
 			body: gin.H{
 				"long_url": url.LongUrl,
 			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.PasetoMaker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
+			},
 			buildStub: func(store *mockdb.MockStore) {
 				store.EXPECT().
 					CreateShortURL(gomock.Any(), gomock.Any()).
@@ -86,6 +95,23 @@ func TestShortenURL(t *testing.T) {
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
+		{
+			name: "NoAuthorization",
+			body: gin.H{
+				"long_url": url.LongUrl,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.PasetoMaker) {
+
+			},
+			buildStub: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					CreateShortURL(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusUnauthorized, recorder.Code)
 			},
 		},
 	}
@@ -111,18 +137,22 @@ func TestShortenURL(t *testing.T) {
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			require.NoError(t, err)
 
+			tc.setupAuth(t, request, server.tokenMaker)
+
 			server.router.ServeHTTP(recorder, request)
 			tc.checkResponse(recorder)
 		})
 	}
 }
 
-func dummyURL(t *testing.T) (url db.Url) {
+func dummyURL(t *testing.T, owner string) (url db.Url) {
+	randomID := tools.RandomString(5)
+
 	url = db.Url{
-		ID:        "1",
 		LongUrl:   "https://www.notion.so/stockbit/Backend-Engineering-Challenge-Link-Shortener-82bf71375701427c9cdd54a10a775ba6?pvs=4",
-		ShortUrl:  "http://localhost:8080/1d0gd",
+		ShortUrl:  randomID,
 		CreatedAt: time.Now(),
+		Owner:     owner,
 	}
 
 	return

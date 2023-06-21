@@ -10,7 +10,11 @@ import (
 
 type Querier interface {
 	CreateShortURL(ctx context.Context, arg CreateShortURLParams) (Url, error)
-	GetLongURL(ctx context.Context, id string) (string, error)
+	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	GetLongURL(ctx context.Context, shortUrl string) (string, error)
+	GetURL(ctx context.Context, shortUrl string) (Url, error)
+	GetUser(ctx context.Context, username string) (User, error)
+	UpdateShortURL(ctx context.Context, arg UpdateShortURLParams) (Url, error)
 }
 
 var _ Querier = (*Queries)(nil)

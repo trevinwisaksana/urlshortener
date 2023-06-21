@@ -38,3 +38,16 @@ func RandomString(n int) string {
 
 	return sb.String()
 }
+
+func RandomUsername() string {
+	return RandomString(6)
+}
+
+func RandomName() string {
+	return RandomString(6)
+}
+
+// RandomEmail generates a random email
+func RandomEmail() string {
+	return RandomString(5) + "@email.com"
+}

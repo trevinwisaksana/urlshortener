@@ -9,8 +9,17 @@ import (
 )
 
 type Url struct {
-	ID        string    `json:"id"`
+	ID        int64     `json:"id"`
 	LongUrl   string    `json:"long_url"`
 	ShortUrl  string    `json:"short_url"`
 	CreatedAt time.Time `json:"created_at"`
+	Owner     string    `json:"owner"`
+}
+
+type User struct {
+	Username       string    `json:"username"`
+	HashedPassword string    `json:"hashed_password"`
+	FullName       string    `json:"full_name"`
+	Email          string    `json:"email"`
+	CreatedAt      time.Time `json:"created_at"`
 }

@@ -50,6 +50,21 @@ func (mr *MockStoreMockRecorder) CreateShortURL(arg0, arg1 interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateShortURL", reflect.TypeOf((*MockStore)(nil).CreateShortURL), arg0, arg1)
 }
 
+// CreateUser mocks base method.
+func (m *MockStore) CreateUser(arg0 context.Context, arg1 db.CreateUserParams) (db.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateUser", arg0, arg1)
+	ret0, _ := ret[0].(db.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateUser indicates an expected call of CreateUser.
+func (mr *MockStoreMockRecorder) CreateUser(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockStore)(nil).CreateUser), arg0, arg1)
+}
+
 // GetLongURL mocks base method.
 func (m *MockStore) GetLongURL(arg0 context.Context, arg1 string) (string, error) {
 	m.ctrl.T.Helper()
@@ -63,4 +78,49 @@ func (m *MockStore) GetLongURL(arg0 context.Context, arg1 string) (string, error
 func (mr *MockStoreMockRecorder) GetLongURL(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLongURL", reflect.TypeOf((*MockStore)(nil).GetLongURL), arg0, arg1)
+}
+
+// GetURL mocks base method.
+func (m *MockStore) GetURL(arg0 context.Context, arg1 string) (db.Url, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetURL", arg0, arg1)
+	ret0, _ := ret[0].(db.Url)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetURL indicates an expected call of GetURL.
+func (mr *MockStoreMockRecorder) GetURL(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetURL", reflect.TypeOf((*MockStore)(nil).GetURL), arg0, arg1)
+}
+
+// GetUser mocks base method.
+func (m *MockStore) GetUser(arg0 context.Context, arg1 string) (db.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUser", arg0, arg1)
+	ret0, _ := ret[0].(db.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUser indicates an expected call of GetUser.
+func (mr *MockStoreMockRecorder) GetUser(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockStore)(nil).GetUser), arg0, arg1)
+}
+
+// UpdateShortURL mocks base method.
+func (m *MockStore) UpdateShortURL(arg0 context.Context, arg1 db.UpdateShortURLParams) (db.Url, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateShortURL", arg0, arg1)
+	ret0, _ := ret[0].(db.Url)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateShortURL indicates an expected call of UpdateShortURL.
+func (mr *MockStoreMockRecorder) UpdateShortURL(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateShortURL", reflect.TypeOf((*MockStore)(nil).UpdateShortURL), arg0, arg1)
 }
