@@ -69,9 +69,10 @@ func TestRegisterAPI(t *testing.T) {
 			},
 			buildStub: func(store *mockdb.MockStore) {
 				arg := db.CreateUserParams{
-					Username: user.Username,
-					FullName: user.FullName,
-					Email:    user.Email,
+					Username:       user.Username,
+					HashedPassword: password,
+					FullName:       user.FullName,
+					Email:          user.Email,
 				}
 
 				store.EXPECT().
@@ -201,7 +202,7 @@ func TestRegisterAPI(t *testing.T) {
 }
 
 func randomUser(t *testing.T) (user db.User, password string) {
-	password = tools.RandomString(6)
+	password = tools.RandomAlphanumericString(6)
 	hashedPassword, err := tools.HashPassword(password)
 	require.NoError(t, err)
 

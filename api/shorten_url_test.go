@@ -146,7 +146,7 @@ func TestShortenURL(t *testing.T) {
 }
 
 func dummyURL(t *testing.T, owner string) (url db.Url) {
-	randomID := tools.RandomString(5)
+	randomID := tools.RandomAlphanumericString(5)
 
 	url = db.Url{
 		LongUrl:   "https://www.notion.so/stockbit/Backend-Engineering-Challenge-Link-Shortener-82bf71375701427c9cdd54a10a775ba6?pvs=4",

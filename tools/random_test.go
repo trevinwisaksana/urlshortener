@@ -7,7 +7,7 @@ import (
 )
 
 func TestRandomString(t *testing.T) {
-	randomID := RandomString(5)
+	randomID := RandomAlphanumericString(5)
 	require.Equal(t, len(randomID), 5)
 	require.NotNil(t, randomID)
 }

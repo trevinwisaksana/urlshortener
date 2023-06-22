@@ -7,6 +7,7 @@ import (
 )
 
 const alphanumeric = "abcdefghijklmnopqrstuvwxyz1234567890-_"
+const alphabets = "abcdefghijklmnopqrstuvwxyz"
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
@@ -20,8 +21,8 @@ func hasUnderscoreSuffix(r string) bool {
 	return false
 }
 
-// RandomString generates a random string of length n
-func RandomString(n int) string {
+// RandomAlphanumericString generates a random string of length n
+func RandomAlphanumericString(n int) string {
 	var sb strings.Builder
 	k := len(alphanumeric)
 
@@ -33,7 +34,19 @@ func RandomString(n int) string {
 	result := sb.String()
 
 	if hasUnderscoreSuffix(result) {
-		return RandomString(n)
+		return RandomAlphanumericString(n)
+	}
+
+	return sb.String()
+}
+
+func RandomString(n int) string {
+	var sb strings.Builder
+	k := len(alphabets)
+
+	for i := 0; i < n; i++ {
+		c := alphabets[rand.Intn(k)]
+		sb.WriteByte(c)
 	}
 
 	return sb.String()
@@ -44,10 +57,10 @@ func RandomUsername() string {
 }
 
 func RandomName() string {
-	return RandomString(6)
+	return RandomAlphanumericString(6)
 }
 
 // RandomEmail generates a random email
 func RandomEmail() string {
-	return RandomString(5) + "@email.com"
+	return RandomAlphanumericString(5) + "@email.com"
 }

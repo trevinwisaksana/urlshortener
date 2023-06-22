@@ -3,7 +3,6 @@ package api
 import (
 	"errors"
 	"net/http"
-	"regexp"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -37,7 +36,7 @@ func (server *Server) createShortURL(ctx *gin.Context) {
 
 	authPayload := ctx.MustGet(authorzationPayloadKey).(*token.Payload)
 
-	randomID := tools.RandomString(5)
+	randomID := tools.RandomAlphanumericString(5)
 
 	arg := db.CreateShortURLParams{
 		LongUrl:  req.LongUrl,
@@ -79,7 +78,7 @@ func (server *Server) redirectURL(ctx *gin.Context) {
 
 type EditURLRequest struct {
 	CurrentShortlink string `json:"current_shortlink" binding:"required"`
-	NewShortLink     string `json:"new_shortlink" binding:"required"`
+	NewShortLink     string `json:"new_shortlink" binding:"required,alphanum,max=5"`
 }
 
 func (server *Server) editURL(ctx *gin.Context) {
@@ -131,18 +130,6 @@ func (server *Server) isValid(ctx *gin.Context, shortUrl string, newShortUrl str
 	if response.Owner != username {
 		err := errors.New("User is not authorized to edit this url")
 		return http.StatusUnauthorized, err
-	}
-
-	if len(newShortUrl) > 5 {
-		err := errors.New("Shortlink cannot be longer than 5 characters")
-		return http.StatusBadRequest, err
-	}
-
-	isAlphanumeric := regexp.MustCompile(`^[a-zA-Z0-9]*$`).MatchString(newShortUrl)
-
-	if !isAlphanumeric {
-		err := errors.New("Shortlink must only contain alphanumeric characters")
-		return http.StatusBadRequest, err
 	}
 
 	return http.StatusOK, nil

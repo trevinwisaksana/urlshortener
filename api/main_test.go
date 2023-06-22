@@ -14,7 +14,7 @@ import (
 
 func NewTestServer(t *testing.T, store db.Store) *Server {
 	config := config.Config{
-		TokenSymmetricKey:   tools.RandomString(32),
+		TokenSymmetricKey:   tools.RandomAlphanumericString(32),
 		AccessTokenDuration: time.Minute,
 	}
 

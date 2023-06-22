@@ -9,7 +9,7 @@ import (
 )
 
 func generateShortURL(t *testing.T) (Url, error) {
-	randomID := tools.RandomString(5)
+	randomID := tools.RandomAlphanumericString(5)
 	user := tools.RandomUsername()
 
 	longUrl := "https://www.notion.so/stockbit/Backend-Engineering-Challenge-Link-Shortener-82bf71375701427c9cdd54a10a775ba6?pvs=4"
@@ -50,7 +50,7 @@ func TestUpdateShortURL(t *testing.T) {
 	dummyData, err := generateShortURL(t)
 	require.NoError(t, err)
 
-	randomID := tools.RandomString(5)
+	randomID := tools.RandomAlphanumericString(5)
 
 	arg := UpdateShortURLParams{
 		ShortUrl:        dummyData.ShortUrl,

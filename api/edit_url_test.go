@@ -24,6 +24,8 @@ func TestEditURL(t *testing.T) {
 	url := dummyURL(t, user.Username)
 	updatedUrl := updatedDummyURL(t, url.ShortUrl, user.Username)
 
+	t.Log(updatedUrl.ShortUrl)
+
 	testCases := []struct {
 		name          string
 		body          gin.H
@@ -129,12 +131,38 @@ func TestEditURL(t *testing.T) {
 			buildStub: func(store *mockdb.MockStore) {
 				store.EXPECT().
 					GetURL(gomock.Any(), gomock.Eq(url.ShortUrl)).
-					Times(1).
-					Return(url, nil)
+					Times(0)
 
 				updateUrlArg := db.UpdateShortURLParams{
 					ShortUrl:        url.ShortUrl,
 					CustomShortlink: "long-shortlink",
+				}
+
+				store.EXPECT().
+					UpdateShortURL(gomock.Any(), gomock.Eq(updateUrlArg)).
+					Times(0)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name: "NonAlphanumeric",
+			body: gin.H{
+				"current_shortlink": url.ShortUrl,
+				"new_shortlink":     "@@@@",
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.PasetoMaker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
+			},
+			buildStub: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetURL(gomock.Any(), gomock.Eq(url.ShortUrl)).
+					Times(0)
+
+				updateUrlArg := db.UpdateShortURLParams{
+					ShortUrl:        url.ShortUrl,
+					CustomShortlink: "@@@@",
 				}
 
 				store.EXPECT().
@@ -177,7 +205,7 @@ func TestEditURL(t *testing.T) {
 }
 
 func updatedDummyURL(t *testing.T, id string, owner string) (url db.Url) {
-	randomID := tools.RandomString(5)
+	randomID := tools.RandomAlphanumericString(5)
 
 	url = db.Url{
 		LongUrl:   "https://www.notion.so/stockbit/Backend-Engineering-Challenge-Link-Shortener-82bf71375701427c9cdd54a10a775ba6?pvs=4",
