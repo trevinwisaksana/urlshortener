@@ -1,0 +1,30 @@
+package model
+
+import "time"
+
+type LoginUserResponse struct {
+	AccessToken string       `json:"access_token"`
+	User        UserResponse `json:"user"`
+}
+
+type UserResponse struct {
+	Username  string    `json:"username"`
+	FullName  string    `json:"full_name"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
+type CreateUserRequest struct {
+	Username string `json:"username" binding:"required,alphanum"`
+	Password string `json:"password" binding:"required,min=6"`
+	FullName string `json:"full_name" binding:"required"`
+	Email    string `json:"email" binding:"required,email"`
+}
+
+type User struct {
+	Username       string    `json:"username"`
+	HashedPassword string    `json:"hashed_password"`
+	FullName       string    `json:"full_name"`
+	Email          string    `json:"email"`
+	CreatedAt      time.Time `json:"created_at"`
+}

@@ -8,7 +8,10 @@ server:
 	go run main.go
 
 mock:
-	mockgen -package mockdb -destination db/mock/store.go github.com/trevinwisaksana/trevin-urlshortener/db/sqlc Store
+	mockgen -source=repository/urlshortener/postgresql/postgresql.go \
+  			-destination=repository/urlshortener/postgresql/mock/postgresql.go \
+  			-package=mockurlshortener \
+  			-self_package=github.com/trevinwisaksana/trevin-urlshortener
 
 sqlc:
 	sqlc generate
